@@ -20,7 +20,7 @@ def set(
     user: Optional[str] = None,
 ):
     if user is None:
-        user = config.default_user
+        user = config.ldap
 
     key = f"{user}/{key}"
 
@@ -30,7 +30,7 @@ def set(
 
 def get(key: str, *, user: Optional[str] = None) -> Any:
     if user is None:
-        user = config.default_user
+        user = config.ldap
     key = f"{user}/{key}"
 
     with _handle_missing_key_errors(key):
@@ -44,7 +44,7 @@ def unset(
     user: Optional[str] = None,
 ):
     if user is None:
-        user = config.default_user
+        user = config.ldap
     key = f"{user}/{key}"
     with _handle_missing_key_errors(key):
         _s3_bucket().delete_objects(Delete={"Objects": [{"Key": key}]})
@@ -59,12 +59,12 @@ def pop(key: str, *, user: Optional[str] = None) -> Any:
 def _s3_bucket():
     s3 = boto3.resource(
         service_name="s3",
-        aws_access_key_id=config.keyval_access_key,
-        aws_secret_access_key=config.keyval_secret_key,
-        endpoint_url=config.keyval_endpoint,
+        aws_access_key_id=config.store_access_key,
+        aws_secret_access_key=config.store_secret_key,
+        endpoint_url=config.store_endpoint,
     )
-    assert config.keyval_bucket is not None
-    return s3.Bucket(config.keyval_bucket)
+    assert config.store_bucket is not None
+    return s3.Bucket(config.store_bucket)
 
 
 @contextlib.contextmanager
