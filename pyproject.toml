@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlotools"
+description = "Tools for experimentation at MLO"
+authors = []
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { file = "LICENSE" }
+dependencies = ["typing_extensions>4"]
+optional-dependencies = { test = ["pytest"] }
+
+[project.urls]
+homepage = "https://github.com/epfml/mlotools"
+repository = "https://github.com/epfml/mlotools"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.isort]
+profile = "black"
+
+[project.scripts]
+mlokv = "mlotools.keyval:main"
