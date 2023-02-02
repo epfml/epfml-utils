@@ -84,7 +84,7 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
 
     basename = directory.resolve().name
     hash = _multi_file_sha1_hash(included_files)
-    user = epfml.config.ldap_user
+    user = epfml.config.ldap
     date = datetime.datetime.now().strftime("%Y%m%d")
     package_id = f"{user}_{basename}_{date}_{hash[-8:]}"
 
