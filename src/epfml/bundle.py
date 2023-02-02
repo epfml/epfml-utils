@@ -2,7 +2,7 @@
 Transfer code between machines through EPFL's S3 storage system,
 and keep a permanent record of the code's state.
 
-To exclude files from the package, you can add a `.codepack.toml` file to your directory:
+To exclude files from the package, you can add a `.epfml.bundle.toml` file to your directory:
 
 ```
 exclude = [
@@ -29,23 +29,27 @@ from typing import Union
 import pathspec
 import toml
 
-import epfml.config
+DEFAULT_CONFIG = {
+    "exclude": [
+        "__pycache__",
+        "._*",
+        ".AppleDouble",
+        ".git",
+        ".gitignore",
+        ".ipynb_checkpoints",
+        ".pylintrc",
+        ".vscode",
+        "*.exr",
+        "*.pyc",
+        "core",
+        "*.egg-info",
+        ".github",
+    ],
+    "include": [],
+    "max_file_size": 100_000,
+}
 
-DEFAULT_EXCLUDE_LIST = [
-    "__pycache__",
-    "._*",
-    ".AppleDouble",
-    ".git",
-    ".gitignore",
-    ".ipynb_checkpoints",
-    ".pylintrc",
-    ".vscode",
-    "*.exr",
-    "*.pyc",
-    "core",
-]
-
-DEFAULT_INCLUDE_LIST = []
+CONFIG_FILENAME = ".epfml.bundle.toml"
 
 
 @dataclasses.dataclass()
@@ -57,13 +61,9 @@ class Package:
 def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
     directory = pathlib.Path(directory)
 
-    config = {
-        "exclude": DEFAULT_EXCLUDE_LIST,
-        "include": DEFAULT_INCLUDE_LIST,
-        "max_file_size": 100_000,
-    }
+    config = {**DEFAULT_CONFIG}
     try:
-        user_config = toml.load(directory / ".codepack.toml")
+        user_config = toml.load(directory / CONFIG_FILENAME)
         config = {**config, **user_config}
     except FileNotFoundError as e:
         pass
@@ -84,9 +84,8 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
 
     basename = directory.resolve().name
     hash = _multi_file_sha1_hash(included_files)
-    user = epfml.config.ldap
     date = datetime.datetime.now().strftime("%Y%m%d")
-    package_id = f"{user}_{basename}_{date}_{hash[-8:]}"
+    package_id = f"{basename}_{date}_{hash[-8:]}"
 
     return Package(package_id, buffer.read())
 
@@ -120,8 +119,8 @@ def _filter_files(
         if file.stat().st_size > max_size:
             raise RuntimeError(
                 f"The file {file} is suspiciously large.\n"
-                "To include it, add it to `include` in `.codepack.toml`.\n"
-                "To exclude it, add it to `exclude` in `.codepack.toml`."
+                f"To include it, add it to `include` in `{CONFIG_FILENAME}`.\n"
+                f"To exclude it, add it to `exclude` in `{CONFIG_FILENAME}`."
             )
         yield file
 

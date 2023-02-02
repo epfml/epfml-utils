@@ -5,7 +5,7 @@ Internal tools for the MLO lab of EPFL.
 ## Installation
 
 ```shell
-$ pip install epfml-utils
+❯ pip install epfml-utils
 ```
 
 Add environment variables to your `~/.bashrc` or equivalent file:
@@ -35,11 +35,11 @@ __Don't__ use this 100's of times in a training script.
 
 On one machine:
 ```shell
-$ epfml store set my_name "Bob"
+❯ epfml store set my_name "Bob"
 ```
 On any other machine:
 ```shell
-$ epfml store get my_name
+❯ epfml store get my_name
 Bob
 ```
 
@@ -57,4 +57,42 @@ epfml.store.set("tensor", torch.zeros(4))
 print(epfml.store.get("tensor"))
 epfml.store.unset("tensor")
 print(epfml.store.pop("my_data"))  # get and delete
+```
+
+
+## Transporting code between machines
+
+### Packing
+
+Upload a copy of the current working directory:
+
+```shell
+❯ epfml bundle pack
+📦 Packaged and shipped.
+⬇️ Unpack with `epfml bundle unpack mlotools_20230202_a205e830 -o .`.
+```
+
+To exclude (large / non-code) files from the package, add a config file to the directory
+
+```shell
+❯ epfml bundle init
+📦 Default config file written to `/Users/vogels/epfl/mlotools/.epfml.bundle.toml`.
+```
+
+and customize it to your needs.
+
+### Unpacking
+
+You can download the code into a directory:
+
+```shell
+epfml bundle unpack mlotools_20230202_a205e830 -o some_directory
+```
+
+Or you can run a training script, or any other shell command, in a temporary check-out of the package:
+
+```shell
+❯ epfml bundle exec mlotools_20230202_a205e830 -- du -sh
+🏃 Running inside a tmp clone of package `mlotools_20230202_a205e830`.
+160K    .
 ```
