@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mlotools"
+name = "epfml-utils"
 description = "Tools for experimentation at MLO"
 authors = []
 version = "0.0.1"
@@ -14,8 +14,8 @@ dependencies = ["typing_extensions>4"]
 optional-dependencies = { test = ["pytest"] }
 
 [project.urls]
-homepage = "https://github.com/epfml/mlotools"
-repository = "https://github.com/epfml/mlotools"
+homepage = "https://github.com/epfml/epfml-utils"
+repository = "https://github.com/epfml/epfml-utils"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -24,4 +24,4 @@ where = ["src"]
 profile = "black"
 
 [project.scripts]
-mlokv = "mlotools.keyval:main"
+epfml = "epfml.cli:main"
