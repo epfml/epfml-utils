@@ -23,7 +23,7 @@ def main():
         for command in commands:
             if args.command == command.name:
                 return command.main(args)
-        
+
         raise RuntimeError(f"Unsupported command {args.command}.")
 
 
@@ -35,6 +35,7 @@ class SubCommand(Protocol):
 
     def main(self, args: argparse.Namespace):
         ...
+
 
 class Store(SubCommand):
     name = "store"
@@ -79,4 +80,3 @@ def _red_background(text: str) -> str:
 
 if __name__ == "__main__":
     main()
-    
