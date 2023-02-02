@@ -60,7 +60,7 @@ class Store(SubCommand):
         if args.subcommand == "get":
             print(store.get(args.key, user=args.user))
         elif args.subcommand == "set":
-            store.set(args.key, args.value, user=args.user)
+            store.set(args.key, args.value, user=args.user, ttl="1d")
         elif args.subcommand == "unset":
             store.unset(args.key, user=args.user)
 

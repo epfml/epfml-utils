@@ -11,6 +11,7 @@ jobs:
       contents: write
 
     steps:
+      - uses: jakebailey/pyright-action@v1
       - uses: etils-actions/pypi-auto-publish@v1
         with:
           pypi-token: ${{ secrets.PYPI_TOKEN }}
