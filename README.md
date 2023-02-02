@@ -86,7 +86,7 @@ and customize it to your needs.
 You can download the code into a directory:
 
 ```shell
-epfml bundle unpack mlotools_20230202_a205e830 -o some_directory
+❯ epfml bundle unpack mlotools_20230202_a205e830 -o some_directory
 ```
 
 Or you can run a training script, or any other shell command, in a temporary check-out of the package:
