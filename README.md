@@ -38,7 +38,7 @@ $ epfml store get my_name
 Bob
 ```
 
-### Usage in Python
+### Python usage
 
 ```python
 import torch
@@ -51,4 +51,5 @@ epfml.store.set("tensor", torch.zeros(4))
 ```python
 print(epfml.store.get("tensor"))
 epfml.store.unset("tensor")
+print(epfml.store.pop("my_data"))  # get and delete
 ```
