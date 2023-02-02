@@ -11,11 +11,11 @@ Internal tools for the MLO lab of EPFL.
 Add environment variables to your `~/.bashrc` or equivalent file:
 
 ```bash
-export EPFML_STORE_S3_ACCESS_KEY = # Ask a friend.
-export EPFML_STORE_S3_SECRET_KEY = # Ask a friend.
-export EPFML_STORE_S3_ENDPOINT = "https://s3.epfl.ch"
-export EPFML_STORE_S3_BUCKET = "13319-6af98428eae7a50adb5158685e34011d"
-export EPFML_LDAP = # Your Gaspar username.
+export EPFML_STORE_S3_ACCESS_KEY=# Ask a friend.
+export EPFML_STORE_S3_SECRET_KEY=# Ask a friend.
+export EPFML_STORE_S3_ENDPOINT="https://s3.epfl.ch"
+export EPFML_STORE_S3_BUCKET="13319-6af98428eae7a50adb5158685e34011d"
+export EPFML_LDAP=# Your Gaspar username.
 ```
 
 and make sure they are loaded:

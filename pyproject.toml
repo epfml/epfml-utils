@@ -10,7 +10,7 @@ version = "0.0.3"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE" }
-dependencies = ["typing_extensions>4", "toml", "pathspec"]
+dependencies = ["typing_extensions>4", "toml", "pathspec", "boto3"]
 optional-dependencies = { test = ["pytest"] }
 
 [project.urls]
