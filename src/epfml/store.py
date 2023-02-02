@@ -50,6 +50,12 @@ def unset(
         _s3_bucket().delete_objects(Delete={"Objects": [{"Key": key}]})
 
 
+def pop(key: str, *, user: Optional[str] = None) -> Any:
+    value = get(key, user=user)
+    unset(key, user=user)
+    return value
+
+
 def _s3_bucket():
     s3 = boto3.resource(
         service_name="s3",
