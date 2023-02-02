@@ -4,15 +4,14 @@ on: [push, workflow_dispatch]
 
 jobs:
   # Auto-publish when version is increased
-  publish-job:
-    # Only publish on `main` branch
+  publish-to-pypi:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-    - uses: etils-actions/pypi-auto-publish@v1
-      with:
-        pypi-token: ${{ secrets.PYPI_TOKEN }}
-        parse-changelog: false
+      - uses: etils-actions/pypi-auto-publish@v1
+        with:
+          pypi-token: ${{ secrets.PYPI_TOKEN }}
+          parse-changelog: false
