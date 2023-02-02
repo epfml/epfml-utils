@@ -11,13 +11,18 @@ $ pip install epfml-utils
 Add environment variables to your `~/.bashrc` or equivalent file:
 
 ```bash
-export EPFML_KEYVAL_S3_ACCESS_KEY = # ask a friend
-export EPFML_KEYVAL_S3_SECRET_KEY = # ask a friend
+export EPFML_KEYVAL_S3_ACCESS_KEY = # Ask a friend.
+export EPFML_KEYVAL_S3_SECRET_KEY = # Ask a friend.
 export EPFML_KEYVAL_S3_ENDPOINT = "https://s3.epfl.ch"
 export EPFML_KEYVAL_S3_BUCKET = "13319-6af98428eae7a50adb5158685e34011d"
-export EPFML_LDAP = # your Gaspar username
+export EPFML_LDAP = # Your Gaspar username.
 ```
 
+and make sure they are loaded:
+```bash
+source ~/.bashrc
+echo $EPFML_LDAP  # Check if this prints your username.
+```
 
 
 ## Key-value store
