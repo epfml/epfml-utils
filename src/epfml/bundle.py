@@ -71,9 +71,9 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
     included_files = list(
         _filter_files(
             directory,
-            exclude=config["exclude"],
-            include=config["include"],
-            max_size=config["max_file_size"],
+            exclude=config["exclude"],  # type: ignore
+            include=config["include"],  # type: ignore
+            max_size=config["max_file_size"],  # type: ignore
         )
     )
     buffer = io.BytesIO()

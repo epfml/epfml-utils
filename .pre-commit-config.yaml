@@ -17,5 +17,5 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies:
-          - types-requests
-        args: [--ignore-missing-imports]
+          - types-toml
+        args: [--ignore-missing-imports, --check-untyped-defs]
