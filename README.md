@@ -96,3 +96,15 @@ Or you can run a training script, or any other shell command, in a temporary che
 🏃 Running inside a tmp clone of package `mlotools_20230202_a205e830`.
 160K    .
 ```
+
+## Contributing
+
+This repository is meant to be a collection of independent tools that each serve a simple well-defined purpose.
+
+If you want to improve any of the tools in this repo, or contribute new tools. Take the following steps:
+
+1. Clone this repository.
+2. Initialize pre-commit: `cd epfml-utils && pre-commit install` (`pip install pre-commit`). This runs a couple of checks before you commit to keep this repo clean.
+3. Ask someone else to scrutinize your contributions. They can help you to improve the API and catch bugs. You can also check these very nice [API design principles](https://github.com/google/etils/blob/main/docs/api-design.md) for tips.
+
+To release a new version on PyPi, just increase the version number in `pyproject.yoml` and commit to Github.
