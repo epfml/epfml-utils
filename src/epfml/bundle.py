@@ -59,16 +59,24 @@ class Package:
     contents: bytes
 
 
-def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
-    directory = pathlib.Path(directory)
+def tar_package(path: Union[str, pathlib.Path] = ".") -> Package:
+    path = pathlib.Path(path)
 
+    if path.is_file():
+        return tar_package_file(path)
+    elif path.is_dir():
+        return tar_package_directory(path)
+    else:
+        raise RuntimeError("Path not found.")
+
+
+def tar_package_directory(directory: pathlib.Path) -> Package:
+    """Package and compress a directory."""
     config = {**DEFAULT_CONFIG}
     try:
         user_config = toml.load(directory / CONFIG_FILENAME)
         config = {**config, **user_config}
     except FileNotFoundError as e:
-        pass
-    except NotADirectoryError as e:
         pass
 
     included_files = list(
@@ -82,16 +90,28 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
         for file in included_files:
-            name_in_archive = (
-                file.relative_to(directory) if directory.is_dir() else directory.name
-            )
+            name_in_archive = file.relative_to(directory)
             tar.add(file, arcname=name_in_archive)
     buffer.seek(0)
 
     basename = directory.resolve().name
-    hash = _multi_file_sha1_hash(included_files)
     date = datetime.datetime.now().strftime("%Y%m%d")
+    hash = _multi_file_sha1_hash(included_files)
     package_id = f"{basename}_{date}_{hash[-8:]}"
+
+    return Package(package_id, buffer.read())
+
+
+def tar_package_file(file: pathlib.Path) -> Package:
+    """Package and compress a single file."""
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
+        tar.add(file, arcname=file.name)
+    buffer.seek(0)
+
+    date = datetime.datetime.now().strftime("%Y%m%d")
+    hash = hashlib.sha1(file.read_bytes()).hexdigest()
+    package_id = f"{file.name}_{date}_{hash[-8:]}"
 
     return Package(package_id, buffer.read())
 
@@ -116,7 +136,7 @@ def _filter_files(
         pathspec.patterns.GitWildMatchPattern, include
     )
 
-    for file in [directory, *directory.rglob("*")]:
+    for file in directory.rglob("*"):
         if exclude_spec.match_file(file):
             continue
         if include_spec.match_file(file):
