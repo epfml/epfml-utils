@@ -35,15 +35,16 @@ DEFAULT_CONFIG = {
         "._*",
         ".AppleDouble",
         ".git",
+        ".github",
         ".gitignore",
         ".ipynb_checkpoints",
+        ".mypy_cache",
         ".pylintrc",
         ".vscode",
+        "*.egg-info",
         "*.exr",
         "*.pyc",
         "core",
-        "*.egg-info",
-        ".github",
     ],
     "include": [],
     "max_file_size": 100_000,
@@ -67,6 +68,8 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
         config = {**config, **user_config}
     except FileNotFoundError as e:
         pass
+    except NotADirectoryError as e:
+        pass
 
     included_files = list(
         _filter_files(
@@ -79,7 +82,10 @@ def tar_package(directory: Union[str, pathlib.Path] = ".") -> Package:
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
         for file in included_files:
-            tar.add(file, arcname=file.relative_to(directory))
+            name_in_archive = (
+                file.relative_to(directory) if directory.is_dir() else directory.name
+            )
+            tar.add(file, arcname=name_in_archive)
     buffer.seek(0)
 
     basename = directory.resolve().name
@@ -110,7 +116,7 @@ def _filter_files(
         pathspec.patterns.GitWildMatchPattern, include
     )
 
-    for file in directory.rglob("*"):
+    for file in [directory, *directory.rglob("*")]:
         if exclude_spec.match_file(file):
             continue
         if include_spec.match_file(file):

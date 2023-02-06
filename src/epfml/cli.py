@@ -120,25 +120,31 @@ class Bundle(SubCommand):
             if args.directory is None:
                 args.directory = pathlib.Path.cwd()
 
-            if not args.directory.is_dir():
-                raise RuntimeError("Not a directory.")
-
             package = bundle.tar_package(args.directory)
-            store.set(f"bundle/{package.id}", package.contents, user=args.user)
+            store.set(
+                f"bundle/{package.id}",
+                package.contents,
+                user=args.user,
+                serializer=store.Raw(),
+            )
 
             print(f"📦 Packaged and shipped.")
             print(f"⬇️  Unpack with `epfml bundle unpack {package.id} -o .`.")
 
         elif args.subcommand == "unpack":
-            package = store.get(f"bundle/{args.package_id}", user=args.user)
-            bundle.tar_extract(package, args.output)
+            byte_content = store.get(
+                f"bundle/{args.package_id}", user=args.user, serializer=store.Raw()
+            )
+            bundle.tar_extract(byte_content, args.output)
             print(f"📦 Delivered to `{args.output}`.", file=sys.stderr)
 
         elif args.subcommand == "exec":
-            package = store.get(f"bundle/{args.package_id}", user=args.user)
+            byte_content = store.get(
+                f"bundle/{args.package_id}", user=args.user, serializer=store.Raw()
+            )
 
             def run_in(directory):
-                bundle.tar_extract(package, directory)
+                bundle.tar_extract(byte_content, directory)
                 subprocess.run(" ".join(args.cmd), cwd=directory, shell=True)
 
             if args.directory is not None:

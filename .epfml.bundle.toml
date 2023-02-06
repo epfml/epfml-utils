@@ -1,3 +1,18 @@
-exclude = [ "__pycache__", "._*", ".AppleDouble", ".git", ".gitignore", ".ipynb_checkpoints", ".pylintrc", ".vscode", "*.exr", "*.pyc", "core", "*.egg-info", ".github",]
+exclude = [
+    "__pycache__",
+    "._*",
+    ".AppleDouble",
+    ".git",
+    ".gitignore",
+    ".ipynb_checkpoints",
+    ".pylintrc",
+    ".vscode",
+    "*.exr",
+    "*.pyc",
+    "core",
+    "*.egg-info",
+    ".github",
+    ".mypy_cache",
+]
 include = []
 max_file_size = 100000
