@@ -121,27 +121,18 @@ class Bundle(SubCommand):
                 args.directory = pathlib.Path.cwd()
 
             package = bundle.tar_package(args.directory)
-            store.set(
-                f"bundle/{package.id}",
-                package.contents,
-                user=args.user,
-                serializer=store.Raw(),
-            )
+            store.set(f"bundle/{package.id}", package.contents, user=args.user)
 
             print(f"📦 Packaged and shipped.")
             print(f"⬇️  Unpack with `epfml bundle unpack {package.id} -o .`.")
 
         elif args.subcommand == "unpack":
-            byte_content = store.get(
-                f"bundle/{args.package_id}", user=args.user, serializer=store.Raw()
-            )
+            byte_content = store.get(f"bundle/{args.package_id}", user=args.user)
             bundle.tar_extract(byte_content, args.output)
             print(f"📦 Delivered to `{args.output}`.", file=sys.stderr)
 
         elif args.subcommand == "exec":
-            byte_content = store.get(
-                f"bundle/{args.package_id}", user=args.user, serializer=store.Raw()
-            )
+            byte_content = store.get(f"bundle/{args.package_id}", user=args.user)
 
             def run_in(directory):
                 bundle.tar_extract(byte_content, directory)

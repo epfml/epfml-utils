@@ -13,44 +13,18 @@ import botocore.exceptions
 import epfml.config as config
 
 
-class Serializer(Protocol):
-    def serialize(self, value) -> bytes:
-        ...
-
-    def deserialize(self, value: bytes) -> Any:
-        ...
-
-
-class Pickle(Serializer):
-    def serialize(self, value) -> bytes:
-        return pickle.dumps(value)
-
-    def deserialize(self, value: bytes) -> Any:
-        return pickle.loads(value)
-
-
-class Raw(Serializer):
-    def serialize(self, value) -> bytes:
-        assert isinstance(value, bytes)
-        return value
-
-    def deserialize(self, value: bytes) -> Any:
-        return value
-
-
 def set(
     key: str,
     value: Any,
     *,
     user: Optional[str] = None,
-    serializer: Serializer = Pickle(),
 ):
     if user is None:
         user = config.ldap
 
     key = f"{user}/{key}"
 
-    serialized_value = serializer.serialize(value)
+    serialized_value = pickle.dumps(value)
     _s3_bucket().put_object(Key=key, Body=serialized_value)
 
 
@@ -58,7 +32,6 @@ def get(
     key: str,
     *,
     user: Optional[str] = None,
-    serializer: Serializer = Pickle(),
 ) -> Any:
     if user is None:
         user = config.ldap
@@ -66,7 +39,7 @@ def get(
 
     with _handle_missing_key_errors(key):
         serialized_value = _s3_bucket().Object(key).get()["Body"].read()
-        return serializer.deserialize(serialized_value)
+        return pickle.loads(serialized_value)
 
 
 def unset(
