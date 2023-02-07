@@ -24,6 +24,7 @@ class Store(SubCommand):
 
     def main(self, args):
         vpn.assert_connected()
+        config.assert_store_is_configured()
 
         if args.subcommand == "get":
             print(store.get(args.key, user=args.user))

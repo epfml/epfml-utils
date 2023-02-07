@@ -34,6 +34,7 @@ class Bundle(SubCommand):
 
     def main(self, args):
         vpn.assert_connected()
+        config.assert_store_is_configured()
 
         for action in self._actions:
             if args.action == action.name:
