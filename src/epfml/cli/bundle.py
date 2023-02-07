@@ -109,6 +109,7 @@ class Exec(SubCommand):
                     cwd=directory,
                     shell=True,
                     user=config.ldap if args.as_ldap else None,
+                    check=True,
                 )
             except KeyError:
                 raise RuntimeError(f"LDAP user `{config.ldap}` not found.")
