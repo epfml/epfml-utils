@@ -20,4 +20,3 @@ def assert_store_is_configured():
             "Please set EPFML_STORE_S3_ACCESS_KEY, EPFML_STORE_S3_SECRET_KEY, EPFML_STORE_S3_ENDPOINT, EPFML_STORE_S3_BUCKET and EPFML_LDAP. "
             "You can get the values from a team mate."
         )
-    print(f"All good {ldap}")
