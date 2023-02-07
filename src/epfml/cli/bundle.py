@@ -56,8 +56,11 @@ class Pack(SubCommand):
         package = bundle.tar_package(args.directory)
         store.set(f"bundle/{package.id}", package.contents, user=args.user)
 
-        print(f"📦 Packaged and shipped.")
-        print(f"⬇️  Unpack with `epfml bundle unpack {package.id} -o .`.")
+        print(f"📦 Packaged and shipped.", file=sys.stderr)
+        print(
+            f"⬇️  Unpack with `epfml bundle unpack {package.id} -o .`.", file=sys.stderr
+        )
+        print(package.id)
 
 
 class Unpack(SubCommand):
