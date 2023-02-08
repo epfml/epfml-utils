@@ -1,4 +1,5 @@
 import argparse
+import os
 import pathlib
 import subprocess
 import sys
@@ -67,7 +68,7 @@ class Unpack(SubCommand):
     name = "unpack"
 
     def define_parser(self, parser):
-        parser.add_argument("package_id", type=str, help="The package to unpack.")
+        parser.add_argument("bundle_id", type=str, help="The package to unpack.")
         parser.add_argument(
             "-o",
             "--output",
@@ -77,7 +78,7 @@ class Unpack(SubCommand):
         )
 
     def main(self, args):
-        byte_content = store.get(f"bundle/{args.package_id}", user=args.user)
+        byte_content = store.get(f"bundle/{args.bundle_id}", user=args.user)
         bundle.tar_extract(byte_content, args.output)
         print(f"📦 Delivered to `{args.output}`.", file=sys.stderr)
 
@@ -93,7 +94,7 @@ class Exec(SubCommand):
             default=False,
             help="Run as the LDAP user.",
         )
-        parser.add_argument("package_id", type=str, help="The package to unpack.")
+        parser.add_argument("bundle_id", type=str, help="The package to unpack.")
         parser.add_argument(
             "cmd",
             type=str,
@@ -102,7 +103,7 @@ class Exec(SubCommand):
         )
 
     def main(self, args):
-        byte_content = store.get(f"bundle/{args.package_id}", user=args.user)
+        byte_content = store.get(f"bundle/{args.bundle_id}", user=args.user)
 
         def run_in(directory):
             bundle.tar_extract(byte_content, directory)
@@ -113,19 +114,20 @@ class Exec(SubCommand):
                     shell=True,
                     user=config.ldap if args.as_ldap else None,
                     check=True,
+                    env={**os.environ, "EPFML_BUNDLE_ID": args.bundle_id},
                 )
             except KeyError:
                 raise RuntimeError(f"LDAP user `{config.ldap}` not found.")
 
         if args.directory is not None:
             print(
-                f"🏃 Running in directory `{args.directory}` ({args.package_id}).",
+                f"🏃 Running in directory `{args.directory}` ({args.bundle_id}).",
                 file=sys.stderr,
             )
             run_in(args.directory)
         else:
             print(
-                f"🏃 Running inside a tmp clone of package `{args.package_id}`.",
+                f"🏃 Running inside a tmp clone of bundle `{args.bundle_id}`.",
                 file=sys.stderr,
             )
             with tempfile.TemporaryDirectory() as tmpdir:
